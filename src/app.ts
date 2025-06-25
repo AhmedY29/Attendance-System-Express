@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
 import authRoutes from './routes/user.route'
+// import usersRoutes from './routes/users.routes';
 import classesRoutes from './routes/classes.route'
 import leaveRoutes from './routes/leave.route'
 
