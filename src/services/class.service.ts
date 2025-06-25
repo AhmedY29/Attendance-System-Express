@@ -41,7 +41,7 @@ export const getClassAttendanceService = async (classId:string) => {
 
 export const getAllClassAttendanceService = async () => {
     const attendance = await Attendance.find();
-
+    console.log('ssss')
     return attendance
 }
 
