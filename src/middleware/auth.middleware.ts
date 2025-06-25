@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { User } from '../models/user.model';  
 import { FORBIDDEN, UNAUTHORIZED } from '../utils/http-status'; 
 import { AppError } from '../utils/error';
-import { jwtConfig } from '@/config/jwt';
+import { jwtConfig } from '../config/jwt';
 
 export interface AuthRequest extends Request {
   user?: any; 
