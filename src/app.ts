@@ -5,9 +5,9 @@ import { connectDB } from './config/connectDB';
 import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
-import authRoutes from './routes/user.route'
+// import authRoutes from './routes/user.route'
 import classesRoutes from './routes/classes.route'
-import leaveRoutes from './routes/leave.route'
+// import leaveRoutes from './routes/leave.route'
 
 const app: Express = express();
 
@@ -26,9 +26,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-app.use('/users', authRoutes);
+// app.use('/users', authRoutes);
 app.use('/classes', classesRoutes);
-app.use('/leave', leaveRoutes);
+// app.use('/leave', leaveRoutes);
 
 // Basic error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
