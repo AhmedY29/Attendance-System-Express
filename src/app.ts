@@ -10,7 +10,6 @@ import classesRoutes from './routes/classes.route'
 import leaveRoutes from './routes/leave.route'
 
 const app: Express = express();
-
 dotenv.config();
 
 app.use(helmet());
