@@ -66,20 +66,20 @@ const readUsers = async (userId: string, role: string): Promise<any> => {
   }else if(role == 'teacher'){
     
     const teachingRelations = await ClassTeacher.find({ teacherId: userId });
-    const classIds = teachingRelations.map(rel => rel.classId);
+    const classIds = teachingRelations.map((rel:any) => rel.classId);
 
     const studentRelations = await ClassStudent.find({
           classId: { $in: classIds }
         }).populate("studentId");
-        const students = studentRelations.map(sr => sr.studentId);
+        const students = studentRelations.map((sr: any) => sr.studentId);
     console.log(students)
     return students
   } else if(role == 'student'){
     const classStudents = await ClassStudent.find({ studentId: userId })
-    const users = await classStudents.map(cs => cs.classId);
+    const users = await classStudents.map((cs:any) => cs.classId);
     return users
   }
-  return users.map((user) => ({
+  return users.map((user:any) => ({
     id: user.id,
     name: user.name,
     email: user.email,
@@ -145,13 +145,8 @@ const signInUser = async (email: string, password: string): Promise<any> => {
     throw new AppError('User not found', BAD_REQUEST);
   }
 
-  console.log(password)
-  console.log(user.password)
-
-  const hash = await bcrypt.hash(password, 10)
   const comparePassword = await bcrypt.compare(password, user.password)
-  console.log(comparePassword)
-  console.log(hash)
+
   if(!comparePassword){
     throw new AppError('Password not Match', UNAUTHORIZED);
   }
