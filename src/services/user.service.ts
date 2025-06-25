@@ -1,9 +1,13 @@
-import { AppError } from '../utils/error';
 import { User } from '../models/user.model';  
-import { BAD_REQUEST } from '../utils/http-status';
-import bcrypt from 'bcryptjs';
+import { BAD_REQUEST, UNAUTHORIZED } from '../utils/http-status';
+import bcrypt from 'bcrypt';
+import { generateToken } from '../utils/generateToken';
+import { ClassTeacher } from '../models/classTeacher.model';
+import { ClassStudent } from '../models/classStudent.model';
+import { AppError } from '../utils/error';
 
 interface CreateUserInput {
+  name:string;
   email: string;
   password: string;
   role: 'admin' | 'principle' | 'teacher' | 'student';
@@ -11,6 +15,7 @@ interface CreateUserInput {
 
 interface CreateUserResponse {
   id: string;
+  name:string;
   email: string;
   role: string;
   createdAt: Date;
@@ -20,7 +25,7 @@ interface CreateUserResponse {
 const createUser = async (
   userData: CreateUserInput
 ): Promise<CreateUserResponse> => {
-  const { email, password, role } = userData;
+  const { name, email, password, role } = userData;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -31,6 +36,7 @@ const createUser = async (
   const hashedPassword = await bcrypt.hash(password, salt);
 
   const newUser = new User({
+    name,
     email,
     password: hashedPassword,  
     role,
@@ -40,6 +46,7 @@ const createUser = async (
 
   return {
     id: savedUser.id,
+    name: savedUser.name,
     email: savedUser.email,
     role: savedUser.role,
     createdAt: new Date(),
@@ -47,10 +54,34 @@ const createUser = async (
   };
 };
 
-const readUsers = async (): Promise<CreateUserResponse[]> => {
+const readUsers = async (userId: string, role: string): Promise<any> => {
   const users = await User.find();
+  if(role == 'admin'){
+    const users = await User.find();
+    return users
+  }else if(role == 'principle'){
+    
+    const users = await User.find({ role: { $in: ["teacher", "student"] } });
+    return users
+  }else if(role == 'teacher'){
+    
+    const teachingRelations = await ClassTeacher.find({ teacherId: userId });
+    const classIds = teachingRelations.map(rel => rel.classId);
+
+    const studentRelations = await ClassStudent.find({
+          classId: { $in: classIds }
+        }).populate("studentId");
+        const students = studentRelations.map(sr => sr.studentId);
+    console.log(students)
+    return students
+  } else if(role == 'student'){
+    const classStudents = await ClassStudent.find({ studentId: userId })
+    const users = await classStudents.map(cs => cs.classId);
+    return users
+  }
   return users.map((user) => ({
     id: user.id,
+    name: user.name,
     email: user.email,
     role: user.role,
     createdAt: new Date(),
@@ -65,6 +96,7 @@ const readUser = async (userId: string): Promise<CreateUserResponse> => {
   }
   return {
     id: user.id,
+    name: user.name,
     email: user.email,
     role: user.role,
     createdAt: new Date(),
@@ -89,6 +121,7 @@ const updateUser = async (
 
   return {
     id: updatedUser.id,
+    name: updatedUser.name,
     email: updatedUser.email,
     role: updatedUser.role,
     createdAt: new Date(),
@@ -105,5 +138,48 @@ const deleteUser = async (userId: string): Promise<void> => {
   await User.deleteOne({ _id: userId });  
 };
 
-export { createUser, readUsers, readUser, updateUser, deleteUser };
+const signInUser = async (email: string, password: string): Promise<any> => {
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new AppError('User not found', BAD_REQUEST);
+  }
+
+  console.log(password)
+  console.log(user.password)
+
+  const hash = await bcrypt.hash(password, 10)
+  const comparePassword = await bcrypt.compare(password, user.password)
+  console.log(comparePassword)
+  console.log(hash)
+  if(!comparePassword){
+    throw new AppError('Password not Match', UNAUTHORIZED);
+  }
+
+  const token = generateToken(user?._id as string, user.email , user?.role)
+  return token
+};
+
+const assignStudentToClass = async (studentId: string, classId: string): Promise<any> => {
+  
+  const addNewStudentToClass = new ClassStudent({
+    classId,
+    studentId
+  })
+ await addNewStudentToClass.save()
+ return addNewStudentToClass
+};
+
+const assignTeacherToClass = async (teacherId: string, classId: string): Promise<any> => {
+  
+  const addNewTeacherToClass = new ClassTeacher({
+    classId,
+    teacherId
+  })
+ await addNewTeacherToClass.save()
+ return addNewTeacherToClass
+};
+
+
+export { createUser, readUsers, readUser, updateUser, deleteUser, signInUser, assignStudentToClass, assignTeacherToClass };
 

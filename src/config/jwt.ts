@@ -1,7 +1,7 @@
 import { SignOptions } from 'jsonwebtoken';
 
 export const jwtConfig = {
-  secret: process.env.JWT_SECRET || 'your-super-secret-jwt-key',
+  secret: process.env.JWT_SECRET || 'secret-jwt-key',
   accessToken: {
     options: {
       expiresIn: '15m',

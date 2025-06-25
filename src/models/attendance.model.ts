@@ -29,7 +29,7 @@ const attendanceSchema = new Schema<IAttendance>({
     default: Date.now
   },
   status: {
-    type: Boolean,
+    type: String,
   },
 }, { timestamps: true });
 

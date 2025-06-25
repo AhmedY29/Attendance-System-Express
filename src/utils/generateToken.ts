@@ -3,15 +3,15 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const generateToken = (userId: string) => {
+export const generateToken = (userId: string, email: string, role: string) => {
   const token = JWT.sign(
-    { userId },  
+    { userId, email, role},  
     process.env.JWT_SECRET as string,  
     { expiresIn: '1h' }  
   );
 
-  return token;  
-};
+    return token
+}
 
 export const verifyToken = (token: string) => {
   try {

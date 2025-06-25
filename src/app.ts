@@ -8,6 +8,8 @@ import morgan from 'morgan';
 import authRoutes from './routes/user.route'
 import classesRoutes from './routes/classes.route'
 // import usersRoutes from './routes/users.routes';
+import leaveRoutes from './routes/leave.route'
+import attendanceRoutes from './routes/attendance.route'
 // import leaveRoutes from './routes/leave.route'
 
 const app: Express = express();
@@ -28,7 +30,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/users', authRoutes);
 app.use('/classes', classesRoutes);
-// app.use('/leave', leaveRoutes);
+app.use('/leave', leaveRoutes);
+app.use('/attendance', attendanceRoutes);
 
 // Basic error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

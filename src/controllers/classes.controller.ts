@@ -34,7 +34,7 @@ export const getAllClasses = async (req:Request, res:Response) =>{
         .json({
             success:false,
             error:{
-                message:`Error in Get Leave: ${error.message}`
+                message:`Error in Get Classes: ${error.message}`
             }
         })
     }
@@ -83,7 +83,7 @@ export const getClass = async (req:Request, res:Response) =>{
         .json({
             success:false,
             error:{
-                message:`Error in Get Leave: ${error.message}`
+                message:`Error in Get Class: ${error.message}`
             }
         })
     }
@@ -134,7 +134,7 @@ export const getClassTeacher = async (req:Request, res:Response) =>{
         .json({
             success:false,
             error:{
-                message:`Error in Get Leave: ${error.message}`
+                message:`Error in Get Teacher Class: ${error.message}`
             }
         })
     }
@@ -185,7 +185,7 @@ export const getClassStudents = async (req:Request, res:Response) =>{
         .json({
             success:false,
             error:{
-                message:`Error in Get Leave: ${error.message}`
+                message:`Error in Get Class Students: ${error.message}`
             }
         })
     }
@@ -194,6 +194,7 @@ export const getClassStudents = async (req:Request, res:Response) =>{
 // /classes/attendance Get All attendance 
 
 export const getAllClassAttendance = async (req:Request, res:Response) =>{
+    console.log('attendance')
     const token = req.headers.authorization
     const verify = verifyToken(token?.split(' ')[1] as string)
         if(!verify){
@@ -211,7 +212,7 @@ export const getAllClassAttendance = async (req:Request, res:Response) =>{
     try {
         // TODO:
         const attendance = await getAllClassAttendanceService()
-
+        console.log(attendance)
         res.status(200)//OK
         .json({
             success:true,
@@ -272,7 +273,7 @@ export const getClassAttendance = async (req:Request, res:Response) =>{
         .json({
             success:false,
             error:{
-                message:`Error in Get Leave: ${error.message}`
+                message:`Error in Get Class Attendance: ${error.message}`
             }
         })
     }
@@ -411,7 +412,7 @@ export const deleteClass = async (req:Request, res:Response) =>{
         .json({
             success:false,
             error:{
-                message:`Error in Get Leave: ${error.message}`
+                message:`Error in Create Class: ${error.message}`
             }
         })
     }
