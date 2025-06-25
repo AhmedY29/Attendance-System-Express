@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from "express";
 import * as UserService from "../services/user.service";
 import { AppError } from "../utils/error";
 
-const createNewUser = async (req: AuthRequest, res: Response, next: NextFunction) => {
+const createNewUser = async (req: AuthRequest, res: Response, next: NextFunction): Promise<any> => {
   try {
     const { email, password, role } = req.body;
 

@@ -1,6 +1,4 @@
 
-
-
 import express from 'express';
 import * as userController from '../controllers/user.controller';
 import { authorized } from '../middleware/auth.middleware';  

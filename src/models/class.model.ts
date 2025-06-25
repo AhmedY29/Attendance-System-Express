@@ -5,8 +5,8 @@ export interface IClass extends Document {
   description?: string;
   location?: string;
   capacity?: number;
-  dateStartAt?: Date;
-  dateEndAt?: Date;
+  dateStartAt?: string;
+  dateEndAt?: string;
   timeStartAt?: string;
   timeEndAt?: string;
 }
@@ -16,8 +16,8 @@ const classSchema = new Schema<IClass>({
   description: String,
   location: String,
   capacity: Number,
-  dateStartAt: Date,
-  dateEndAt: Date,
+  dateStartAt: String,
+  dateEndAt: String,
   timeStartAt: String,
   timeEndAt: String,
 }, { timestamps: true });
