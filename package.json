@@ -2,6 +2,12 @@
   "name": "express-weekendp",
   "version": "1.0.0",
   "main": "index.js",
+    "engines": {
+    "node": "18.x"
+  },
+  "resolutions": {
+  "@types/node": "latest"
+},
   "scripts": {
     "start": "node dist/app.js",
     "build": "tsc",
