@@ -51,7 +51,7 @@ export const getClassTeacherService = async (classId:string) => {
 
 export const getClassStudentsService = async (classId:string) => {
     // I think studentId is not Prior studentId:string
-    const attendance = await ClassStudent.find({classId});
+    const attendance = await ClassStudent.find({classId}).populate('studentId');
 
     return attendance
 }
