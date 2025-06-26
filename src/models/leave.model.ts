@@ -6,6 +6,7 @@ export interface ILeave extends Document {
   leavedAt: Date;
   leaveType: 'sick' | 'personal' | 'other';
   leaveReason: string,
+  status: string,
   acceptedBy?: mongoose.Types.ObjectId;
   acceptedAt?: Date;
   rejectedBy?: mongoose.Types.ObjectId;
@@ -22,6 +23,7 @@ const leaveSchema = new Schema<ILeave>({
   acceptedAt: Date,
   rejectedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   rejectedAt: Date,
+  status: { type: String, default:'Pending'},
 }, { timestamps: true });
 
 export const Leave = mongoose.model<ILeave>('Leave', leaveSchema);

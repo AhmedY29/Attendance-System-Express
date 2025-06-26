@@ -45,20 +45,20 @@ export const getLeaveByUserIdService = async (userId: string) => {
   return leaves;
 };
 
-export const acceptLeaveService = async (leaveId: string) => {
+export const acceptLeaveService = async (leaveId: string, acceptedBy: string) => {
   const updatedLeave = await Leave.findByIdAndUpdate(
     leaveId,
-    { status: "accepted" },
+    { status: "accepted", acceptedAt: new Date, acceptedBy },
     { new: true }
   );
 
   return updatedLeave;
 };
 
-export const rejectLeaveService = async (leaveId: string) => {
+export const rejectLeaveService = async (leaveId: string, rejectedBy: string) => {
   const updatedLeave = await Leave.findByIdAndUpdate(
     leaveId,
-    { status: "rejected" },
+    { status: "rejected", rejectedAt: new Date, rejectedBy },
     { new: true }
   );
 

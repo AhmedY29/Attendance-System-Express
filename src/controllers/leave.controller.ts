@@ -179,10 +179,38 @@ export const createLeave = async (req:Request, res:Response) =>{
 }
 
 export const acceptLeave = async (req: Request, res: Response) => {
-  const { leaveId } = req.params;
+  const { leaveId, userId } = req.params;
+  if(!leaveId){
+    res.status(BAD_REQUEST)
+    .json({
+      success: false,
+      message:'Leave Id is Require'
+    })
+    return
+  }
 
+  if(!userId){
+    res.status(BAD_REQUEST)
+    .json({
+      success: false,
+      message:'User Id is Require'
+    })
+    return
+  }
+    const token = req.headers.authorization
+    const verify = verifyToken(token?.split(' ')[1] as string)
+        if(!verify){
+        res.status(401) // UNAUTHORAIZE
+        .json({
+            success:false,
+            error:{
+                message: 'Unauthorize: You have To Sign In'
+            }
+        })
+        return;
+    }
   try {
-    const leave = await acceptLeaveService(leaveId);
+    const leave = await acceptLeaveService(leaveId, (verify.userId as string));
 
     if (!leave) {
        res.status(NOT_FOUND).json({ message: "Leave not found" });
@@ -195,10 +223,38 @@ export const acceptLeave = async (req: Request, res: Response) => {
 };
 
 export const rejectLeave = async (req: Request, res: Response) => {
-  const { leaveId } = req.params;
+  const { leaveId, userId } = req.params;
+    if(!leaveId){
+    res.status(BAD_REQUEST)
+    .json({
+      success: false,
+      message:'Leave Id is Require'
+    })
+    return
+  }
 
+  if(!userId){
+    res.status(BAD_REQUEST)
+    .json({
+      success: false,
+      message:'User Id is Require'
+    })
+    return
+  }
+    const token = req.headers.authorization
+    const verify = verifyToken(token?.split(' ')[1] as string)
+        if(!verify){
+        res.status(401) // UNAUTHORAIZE
+        .json({
+            success:false,
+            error:{
+                message: 'Unauthorize: You have To Sign In'
+            }
+        })
+        return;
+    }
   try {
-    const leave = await rejectLeaveService(leaveId);
+    const leave = await rejectLeaveService(leaveId, verify.userId);
 
     if (!leave) {
        res.status(NOT_FOUND).json({ message: "Leave not found" });
