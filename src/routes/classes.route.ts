@@ -1,3 +1,4 @@
+import { createClass, deleteClass, getAllClassAttendance, getAllClasses, getClass, getClassAttendance, getClassStudents, getClassTeacher, updateClass } from '../controllers/classes.controller';
 import { Router } from 'express';
 
 
@@ -6,24 +7,35 @@ const router = Router();
 
 // Just Add Controller
 
-// /classes/:id Get All Classes
-router.get('/',  )
+console.log('router')
+// /classes/ Get All Classes
+router.get('/', getAllClasses )
+
+// /classes/attendance Get attendance For Specific Class
+router.get('/attendance', getAllClassAttendance  )
 
 // /classes/:id Get Class
-router.get('/:id',  )
+router.get('/:classId', getClass )
+
+// /classes/:id Get Class
+router.delete('/:classId', deleteClass )
+
+// /classes/:id Get Class
+router.put('/:classId', updateClass )
 
 // /classes/:id/teacher Get Teacher For Specific Class
-router.get('/:id/teacher',  )
+router.get('/:classId/teacher', getClassTeacher )
 
 // /classes/:id/students Get All Students For Specific Class
-router.get('/:id/students',  )
+router.get('/:classId/students', getClassStudents  )
 
 
 // /classes/:id/attendance Get attendance For Specific Class
-router.get('/:id/attendance',  )
+router.get('/:classId/attendance', getClassAttendance  )
 
 // /classes/create For Add New Class By Admin
-router.post('/create', )
+router.post('/create', createClass )
+
 
 
 

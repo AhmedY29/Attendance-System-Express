@@ -1,11 +1,11 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 
 export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  role: 'admin' | 'principle' | 'teacher' | 'student';
+  role: 'admin' | 'principal' | 'teacher' | 'student';
   comparePassword(candidatePassword: string): Promise<boolean>;  
 }
 
@@ -29,7 +29,7 @@ const userSchema = new Schema<IUser>(
     },
     role: {
       type: String,
-      enum: ['admin', 'principle', 'teacher', 'student'],
+      enum: ['admin', 'principal', 'teacher', 'student'],
       default: 'student',
       required: true,
     },
@@ -55,21 +55,5 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();  
-  try {
-    const salt = await bcrypt.genSalt(10);  
-    this.password = await bcrypt.hash(this.password, salt);  
-    next();
-  } catch (error: any) {
-    return next(error);  
-  }
-});
-
-userSchema.methods.comparePassword = async function (
-  candidatePassword: string
-): Promise<boolean> {
-  return bcrypt.compare(candidatePassword, this.password);  
-};
 
 export const User = mongoose.model<IUser>('User', userSchema);

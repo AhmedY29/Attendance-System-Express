@@ -5,6 +5,7 @@ export interface IAttendance extends Document {
   attendeeId: mongoose.Types.ObjectId;
   attenderId: mongoose.Types.ObjectId;
   attendeeAt?: Date;
+  status?:boolean
 }
 
 const attendanceSchema = new Schema<IAttendance>({
@@ -27,6 +28,9 @@ const attendanceSchema = new Schema<IAttendance>({
     type: Date,
     default: Date.now
   },
+  status: {
+    type: String,
+  },
 }, { timestamps: true });
 
-export default mongoose.model<IAttendance>('Attendance', attendanceSchema);
+export const Attendance = mongoose.model<IAttendance>('Attendance', attendanceSchema);

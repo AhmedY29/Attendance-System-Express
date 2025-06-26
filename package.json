@@ -2,10 +2,17 @@
   "name": "express-weekendp",
   "version": "1.0.0",
   "main": "index.js",
+    "engines": {
+    "node": "18.x"
+  },
+  "resolutions": {
+  "@types/node": "latest"
+},
   "scripts": {
     "start": "node dist/app.js",
     "build": "tsc",
     "dev": "nodemon src/app.ts",
+    "render-build": "npm install --production=false && npm install @types/node @types/express @types/mongoose @types/bcrypt @types/jsonwebtoken @types/cors @types/morgan @types/dotenv --save-dev && tsc --skipLibCheck && cp -r src/public dist/public || true",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -19,7 +26,13 @@
     "helmet": "^8.1.0",
     "morgan": "^1.10.0",
     "swagger-ui-express": "^5.0.1",
-    "winston": "^3.17.0"
+    "dotenv": "^16.5.0",
+    "winston": "^3.17.0",
+    "axios": "^1.10.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.0"
+
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -27,14 +40,9 @@
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
-    "@types/node": "^24.0.3",
-    "axios": "^1.10.0",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
+    "@types/node": "^24.0.4",
     "express-rate-limit": "^7.5.1",
     "jest": "^30.0.2",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.16.0",
     "nodemon": "^3.1.10",
     "supertest": "^7.1.1",
     "ts-node": "^10.9.2",
