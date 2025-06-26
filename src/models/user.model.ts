@@ -5,7 +5,7 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  role: 'admin' | 'principle' | 'teacher' | 'student';
+  role: 'admin' | 'principal' | 'teacher' | 'student';
   comparePassword(candidatePassword: string): Promise<boolean>;  
 }
 
@@ -29,7 +29,7 @@ const userSchema = new Schema<IUser>(
     },
     role: {
       type: String,
-      enum: ['admin', 'principle', 'teacher', 'student'],
+      enum: ['admin', 'principal', 'teacher', 'student'],
       default: 'student',
       required: true,
     },

@@ -5,12 +5,13 @@ import { generateToken } from '../utils/generateToken';
 import { ClassTeacher } from '../models/classTeacher.model';
 import { ClassStudent } from '../models/classStudent.model';
 import { AppError } from '../utils/error';
+import { Class } from '../models/class.model';
 
 interface CreateUserInput {
   name:string;
   email: string;
   password: string;
-  role: 'admin' | 'principle' | 'teacher' | 'student';
+  role: 'admin' | 'principal' | 'teacher' | 'student';
 }
 
 interface CreateUserResponse {
@@ -59,7 +60,7 @@ const readUsers = async (userId: string, role: string): Promise<any> => {
   if(role == 'admin'){
     const users = await User.find();
     return users
-  }else if(role == 'principle'){
+  }else if(role == 'principal'){
     
     const users = await User.find({ role: { $in: ["teacher", "student"] } });
     return users
@@ -157,6 +158,20 @@ const signInUser = async (email: string, password: string): Promise<any> => {
 
 const assignStudentToClass = async (studentId: string, classId: string): Promise<any> => {
   
+  const user = await User.findById(studentId);
+  
+  if (!user) {
+    throw new AppError('User not found', 404);
+  }
+
+  if (user?.role != 'student') {
+    throw new AppError('this User Not Principal ', 400);
+  }
+
+  const studentAlreadyExist = await ClassStudent.findOne({studentId:studentId, classId:classId})
+  if(studentAlreadyExist){
+    throw new AppError('This Student Already in Class', BAD_REQUEST);
+  }
   const addNewStudentToClass = new ClassStudent({
     classId,
     studentId
@@ -166,7 +181,24 @@ const assignStudentToClass = async (studentId: string, classId: string): Promise
 };
 
 const assignTeacherToClass = async (teacherId: string, classId: string): Promise<any> => {
+
+  const user = await User.findById(teacherId);
   
+  if (!user) {
+    throw new AppError('User not found', 404);
+  }
+
+  if (user?.role != 'teacher') {
+    throw new AppError('this User Not Teacher ', 400);
+  }
+
+  const teacherExist = await ClassTeacher.findOne({ teacherId: teacherId, classId: classId})
+
+  if(teacherExist){
+
+   throw new AppError('This Teacher Already in Class', BAD_REQUEST);
+
+  }
   const addNewTeacherToClass = new ClassTeacher({
     classId,
     teacherId
@@ -175,6 +207,99 @@ const assignTeacherToClass = async (teacherId: string, classId: string): Promise
  return addNewTeacherToClass
 };
 
+const assignPrincipalToClass = async (principalId: string, classId: string): Promise<any> => {
 
-export { createUser, readUsers, readUser, updateUser, deleteUser, signInUser, assignStudentToClass, assignTeacherToClass };
+  const user = await User.findById(principalId);
+  
+  if (!user) {
+    throw new AppError('User not found', 404);
+  }
+
+  if (user?.role != 'principal') {
+    throw new AppError('this User Not Principal ', 400);
+  }
+  const teacherExist = await ClassTeacher.findOne({ teacherId: principalId, classId: classId})
+
+  if(teacherExist){
+
+   throw new AppError('This Principal Already in Class', BAD_REQUEST);
+
+  }
+  const addNewTeacherToClass = new ClassTeacher({
+    classId,
+    teacherId:principalId
+  })
+ await addNewTeacherToClass.save()
+ return addNewTeacherToClass
+};
+
+const deleteStudentFromClass = async (studentId: string, classId: string): Promise<any> => {
+
+  const user = await User.findById(studentId);
+  
+  if (!user) {
+    throw new AppError('User not found', 404);
+  }
+
+  if (user?.role != 'student') {
+    throw new AppError('this User Not Student ', 400);
+  }
+
+  const studentAlreadyExist = await ClassStudent.findByIdAndDelete({studentId:studentId, classId:classId})
+  if(!studentAlreadyExist){
+    throw new AppError('Student is Not in Class', BAD_REQUEST);
+  }
+
+  return studentAlreadyExist
+};
+
+const deleteTeacherFromClass = async (teacherId: string, classId: string): Promise<any> => {
+
+    const user = await User.findById(teacherId);
+  
+  if (!user) {
+    throw new AppError('User not found', 404);
+  }
+
+  if (user?.role != 'teacher') {
+    throw new AppError('this User Not Teacher ', 400);
+  }
+
+  const teacherExist = await ClassTeacher.findByIdAndDelete({ teacherId: teacherId, classId: classId})
+
+  if(!teacherExist){
+
+   throw new AppError('Teacher is Not in this Class', BAD_REQUEST);
+
+  }
+  
+  return teacherExist
+};
+
+const deletePrincipalFromClass = async (principalId: string, classId: string): Promise<any> => {
+
+  const user = await User.findById(principalId);
+  
+  if (!user) {
+    throw new AppError('User not found', 404);
+  }
+
+  if (user?.role != 'principal') {
+    throw new AppError('this User Not Principal ', 400);
+  }
+  const principalExist = await ClassTeacher.findByIdAndDelete({ teacherId: principalId, classId: classId})
+
+  if(!principalExist){
+
+   throw new AppError('Principal is not in Class', BAD_REQUEST);
+
+  }
+  return principalExist
+};
+
+
+export { createUser, readUsers, readUser, updateUser, deleteUser, signInUser,
+assignStudentToClass, assignTeacherToClass, assignPrincipalToClass, deleteStudentFromClass,
+deleteTeacherFromClass,
+deletePrincipalFromClass, };
 

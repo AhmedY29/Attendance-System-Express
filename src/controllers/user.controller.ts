@@ -193,6 +193,122 @@ const assignTeacher = async (req: AuthRequest, res: Response, next: NextFunction
   }
 };
 
+const assignPrincipal = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  const { principalId, classId } = req.body
+
+  if(!principalId){
+    res.status(BAD_REQUEST)
+    .json({
+      success: false,
+      message: 'Principal Id is Require'
+    })
+    return
+  }
+
+  if(!classId){
+    res.status(BAD_REQUEST)
+    .json({
+      success: false,
+      message: 'Class Id is Require'
+    })
+    return
+  }
+  try {
+   const assignTeacher = await UserService.assignPrincipalToClass(principalId, classId);
+    
+    res.status(CREATED).json({ success: true, message: "Assign Principal successfully" ,assignTeacher });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteStudentClass = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  const { studentId, classId } = req.body
+
+  if(!studentId){
+    res.status(BAD_REQUEST)
+    .json({
+      success: false,
+      message: 'Student Id is Require'
+    })
+    return
+  }
+
+  if(!classId){
+    res.status(BAD_REQUEST)
+    .json({
+      success: false,
+      message: 'Class Id is Require'
+    })
+    return
+  }
+  try {
+   const assignStudent = await UserService.assignStudentToClass(studentId, classId);
+    
+    res.status(CREATED).json({ success: true, message: "Assign Student successfully" ,assignStudent });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteTeacherClass = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  const { teacherId, classId } = req.body
+
+  if(!teacherId){
+    res.status(BAD_REQUEST)
+    .json({
+      success: false,
+      message: 'Teacher Id is Require'
+    })
+    return
+  }
+
+  if(!classId){
+    res.status(BAD_REQUEST)
+    .json({
+      success: false,
+      message: 'Class Id is Require'
+    })
+    return
+  }
+  try {
+   const assignTeacher = await UserService.assignTeacherToClass(teacherId, classId);
+    
+    res.status(CREATED).json({ success: true, message: "Assign Teacher successfully" ,assignTeacher });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deletePrincipalClass = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  const { principalId, classId } = req.body
+
+  if(!principalId){
+    res.status(BAD_REQUEST)
+    .json({
+      success: false,
+      message: 'Principal Id is Require'
+    })
+    return
+  }
+
+  if(!classId){
+    res.status(BAD_REQUEST)
+    .json({
+      success: false,
+      message: 'Class Id is Require'
+    })
+    return
+  }
+  try {
+   const assignTeacher = await UserService.deletePrincipalFromClass(principalId, classId);
+    
+    res.status(CREATED).json({ success: true, message: "Assign Principal successfully" ,assignTeacher });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 
  const getAllLeave = async (req:Request, res:Response) =>{
@@ -262,7 +378,11 @@ export {
   signIn,
   assignStudent,
   assignTeacher,
+  assignPrincipal,
   getAllLeave,
   getUserLeaves,
+  deleteStudentClass,
+  deleteTeacherClass,
+  deletePrincipalClass,
 };
 
