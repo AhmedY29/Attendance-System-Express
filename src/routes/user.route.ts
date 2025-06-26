@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post('/users', authorized, restrictTo('admin'), userController.createNewUser);  
 router.post('/users/signin', userController.signIn);  
-router.get('/users', authorized, restrictTo('admin', 'teacher', 'student'), userController.fetchAllUsers);  
+router.get('/users', authorized, userController.fetchAllUsers);  
 router.get('/users', authorized, restrictTo('admin', 'teacher'), userController.fetchAllUsers);  
 router.post('/assignStudent', authorized, restrictTo('admin'), userController.assignStudent);  
 router.post('/assignTeacher', authorized, restrictTo('admin'), userController.assignTeacher);  
