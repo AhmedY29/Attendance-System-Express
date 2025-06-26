@@ -1,3 +1,4 @@
+import { ClassTeacher } from "../models/classTeacher.model"
 import { createClassService, deleteClassService, getAllClassAttendanceService, getAllClassesService, getClassAttendanceService, getClassService, getClassStudentsService, getClassTeacherService } from "../services/class.service"
 import { verifyToken } from "../utils/generateToken"
 import { Request, Response } from "express"
@@ -406,6 +407,54 @@ export const deleteClass = async (req:Request, res:Response) =>{
         .json({
             success:true,
             message: `Deleted Class Successfully`
+        })
+    } catch (error: any) {
+        res.status(400) //BAD_REQ
+        .json({
+            success:false,
+            error:{
+                message:`Error in Create Class: ${error.message}`
+            }
+        })
+    }
+}
+
+export const getTeacherClasses = async (req:Request, res:Response) =>{
+    const token = req.headers.authorization
+    const verify = verifyToken(token?.split(' ')[1] as string)
+        if(!verify){
+        res.status(401) // UNAUTHORAIZE
+        .json({
+            success:false,
+            error:{
+                message: 'Unauthorize: You have To Sign In'
+            }
+        })
+        return;
+    }
+
+    const { teacherId } = req.params
+
+    if(!teacherId){
+        res.status(400) //BAD_REQ
+        .json({
+            success: false,
+            error:{
+                message: 'class ID is Required!'
+            }
+        })
+        return
+    }
+
+
+    try {
+        // TODO:
+        const createLeave = await ClassTeacher.findOne({teacherId})
+
+        res.status(200)//OK
+        .json({
+            success:true,
+            data: createLeave
         })
     } catch (error: any) {
         res.status(400) //BAD_REQ

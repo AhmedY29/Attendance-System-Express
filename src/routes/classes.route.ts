@@ -1,4 +1,4 @@
-import { createClass, deleteClass, getAllClassAttendance, getAllClasses, getClass, getClassAttendance, getClassStudents, getClassTeacher, updateClass } from '../controllers/classes.controller';
+import { createClass, deleteClass, getAllClassAttendance, getAllClasses, getClass, getClassAttendance, getClassStudents, getClassTeacher, getTeacherClasses, updateClass } from '../controllers/classes.controller';
 import { Router } from 'express';
 
 
@@ -32,6 +32,9 @@ router.get('/:classId/students', getClassStudents  )
 
 // /classes/:id/attendance Get attendance For Specific Class
 router.get('/:classId/attendance', getClassAttendance  )
+
+// /classes/:id/attendance Get attendance For Specific Class
+router.get('/teacher/:teacherId', getTeacherClasses  )
 
 // /classes/create For Add New Class By Admin
 router.post('/create', createClass )
